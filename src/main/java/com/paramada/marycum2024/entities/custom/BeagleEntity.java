@@ -122,10 +122,10 @@ public class BeagleEntity extends WolfEntity {
 
     public static DefaultAttributeContainer.Builder createBeagleAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, Integer.MAX_VALUE)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 1024)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2)
-                .add(EntityAttributes.GENERIC_ARMOR, 99999);
+                .add(EntityAttributes.GENERIC_ARMOR, 30);
     }
 
     @Override

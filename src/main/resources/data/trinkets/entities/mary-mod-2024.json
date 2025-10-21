@@ -5,6 +5,11 @@
   "slots": [
     "chest/necklace",
     "head/hat",
-    "head/face"
+    "head/face",
+    "legs/spell",
+    "hand/ring",
+    "hand/glove",
+    "offhand/glove",
+    "offhand/ring"
   ]
 }

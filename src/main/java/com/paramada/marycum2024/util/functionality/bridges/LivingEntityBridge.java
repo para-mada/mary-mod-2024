@@ -40,7 +40,9 @@ public class LivingEntityBridge {
     }
 
     public static TrinketComponent getTrinketComponent(LivingEntity player) {
-
+        if (player == null) {
+            return null;
+        }
         var trinketComponent = TrinketsApi.getTrinketComponent(player);
         return trinketComponent.orElse(null);
     }

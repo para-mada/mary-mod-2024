@@ -7,7 +7,6 @@ import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Rarity;
@@ -23,7 +22,7 @@ public class MicrophoneTrinket extends TrinketItem {
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, UUID uuid) {
         var modifiers = super.getModifiers(stack, slot, entity, uuid);
-        modifiers.put(ModEntityAttributes.DISTANCE_DAMAGE_MULTIPLIER, new EntityAttributeModifier("mic_dmg_mlt", 1.5, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+        modifiers.put(ModEntityAttributes.DISTANCE_DAMAGE, new EntityAttributeModifier("mic_dmg_mlt", 1.5, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
         return modifiers;
     }
 }

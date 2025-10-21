@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "mary-mod-2024:healing_spell",
+    "mary-mod-2024:regen_spell",
+    "mary-mod-2024:midas_spell",
+    "mary-mod-2024:cursed_shadow",
+    "mary-mod-2024:taunt_skill",
+    "mary-mod-2024:mana_shield",
+    "mary-mod-2024:thunder_storm",
+    "mary-mod-2024:holy_light"
+  ]
+}

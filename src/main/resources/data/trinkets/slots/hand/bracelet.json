@@ -1,0 +1,7 @@
+{
+  "amount": 1,
+  "order": 10,
+  "icon": "mary-mod-2024:gui/trinkets/bracelet",
+  "validator_predicates": ["trinkets:tag"],
+  "drop_rule": "default"
+}

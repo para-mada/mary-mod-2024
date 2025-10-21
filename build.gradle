@@ -70,6 +70,11 @@ dependencies {
     modImplementation("dev.emi:trinkets:${project.trinkets_version}")
     modImplementation("curse.maven:shoulder-surfing-reloaded-243190:${project.shouldersurfing_api_version}")
     modImplementation("maven.modrinth:better-combat:${project.better_combat_version}-fabric")
+    modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}")
+    modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
+    include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+    include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+    include "maven.modrinth:better-combat:${project.better_combat_version}-fabric"
     //include "io.github.kosmx:bendy-lib:${project.bendylib_version}"
 }
 
@@ -79,6 +84,7 @@ processResources {
     inputs.property "loader_version", project.loader_version
     inputs.property "bendylib_version", project.bendylib_version
     inputs.property "player_anim", project.player_anim
+    inputs.property "better_combat_version", project.better_combat_version
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
@@ -86,7 +92,8 @@ processResources {
                 "minecraft_version": project.minecraft_version,
                 "loader_version": project.loader_version,
                 "bendylib_version": project.bendylib_version,
-                "player_anim": project.player_anim
+                "player_anim": project.player_anim,
+                "better_combat_version": project.better_combat_version
     }
 }
 

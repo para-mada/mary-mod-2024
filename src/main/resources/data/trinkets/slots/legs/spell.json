@@ -1,0 +1,7 @@
+{
+  "amount": 3,
+  "order": 10,
+  "icon": "mary-mod-2024:gui/trinkets/spell",
+  "validator_predicates": ["trinkets:tag"],
+  "drop_rule": "default"
+}

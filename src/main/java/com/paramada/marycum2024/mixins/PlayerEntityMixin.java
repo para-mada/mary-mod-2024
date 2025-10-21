@@ -3,22 +3,30 @@ package com.paramada.marycum2024.mixins;
 import com.paramada.marycum2024.effects.ModEffects;
 import com.paramada.marycum2024.events.CustomExplosion;
 import com.paramada.marycum2024.items.ItemManager;
+import com.paramada.marycum2024.items.custom.weapons.GuardianShield;
+import com.paramada.marycum2024.items.custom.weapons.MagicWand;
+import com.paramada.marycum2024.items.trinkets.bases.SpellTrinket;
 import com.paramada.marycum2024.souls.SoulsPlayer;
 import com.paramada.marycum2024.util.functionality.PerformanceCooldownManager;
 import com.paramada.marycum2024.util.functionality.bridges.LivingEntityBridge;
 import com.paramada.marycum2024.util.functionality.bridges.PlayerEntityBridge;
 import com.paramada.marycum2024.util.souls.ISoulsPlayer;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -48,6 +56,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements ISoulsPl
             if (this.getAttackCooldownProgress(0.5f) > 0.9f) {
                 explosionContainer.revive();
             }
+        }
+    }
+
+    @ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;travel(Lnet/minecraft/util/math/Vec3d;)V"), method = "travel")
+    protected Vec3d onTravel(Vec3d movementInput) {
+        if (this.getStackInHand(Hand.MAIN_HAND).getItem() instanceof GuardianShield shield && shield.isChanneling()) {
+            return movementInput.multiply(0, 1, 0);
+        }
+
+        return movementInput;
+    }
+
+    @Inject(at = @At("HEAD"), method = "jump", cancellable = true)
+    protected void onJump(CallbackInfo ci) {
+        if (this.getStackInHand(Hand.MAIN_HAND).getItem() instanceof GuardianShield shield && shield.isChanneling()) {
+            ci.cancel();
         }
     }
 

@@ -32,10 +32,6 @@ public class GameRendererMixin {
                     client.targetedEntity = soulsPlayer.getLockedTarget();
                     ci.cancel();
                 }
-                if (!client.player.isSpectator() && !client.player.isCreative()) {
-                    client.crosshairTarget = BlockHitResult.createMissed(client.player.getPos(), client.player.getHorizontalFacing(), client.player.getBlockPos());
-                    ci.cancel();
-                }
             }
         }
     }

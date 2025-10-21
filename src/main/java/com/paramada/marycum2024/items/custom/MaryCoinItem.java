@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MaryCoinItem extends MaryItem {
     public MaryCoinItem() {
-        super(new Settings().fireproof().rarity(Rarity.RARE).maxCount(999));
+        super(new Settings().fireproof().rarity(Rarity.RARE).maxCount(100));
     }
 
     @Override

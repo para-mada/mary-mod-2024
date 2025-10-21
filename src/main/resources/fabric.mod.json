@@ -8,6 +8,12 @@
   "contact": {
     "repo": "https://github.com/xshaf/MaryCum2024"
   },
+  "custom": {
+    "cardinal-components": [
+      "mary-mod-2024:mana",
+      "mary-mod-2024:shield"
+    ]
+  },
   "license": "All-Rights-Reserved",
   "icon": "assets/mary-mod-2024/icon.png",
   "environment": "*",
@@ -17,6 +23,11 @@
     ],
     "main": [
       "com.paramada.marycum2024.MaryMod2024"
+    ],
+    "cardinal-components": [
+    ],
+    "cardinal-components-entity": [
+      "com.paramada.marycum2024.attributes.ModEntityComponents"
     ]
   },
   "mixins": [
@@ -30,6 +41,6 @@
     "player-animator": "${player_anim}"
   },
   "recommends": {
-    "better-combat": ">=1.8.7"
+    "bettercombat": ">=1.8.7"
   }
 }

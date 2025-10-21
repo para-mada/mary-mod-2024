@@ -3,9 +3,11 @@ package com.paramada.marycum2024.souls;
 import com.github.exopandora.shouldersurfing.api.client.ShoulderSurfing;
 import com.github.exopandora.shouldersurfing.api.model.Perspective;
 import com.github.exopandora.shouldersurfing.client.ShoulderSurfingImpl;
+import com.paramada.marycum2024.items.trinkets.bases.SpellTrinket;
 import com.paramada.marycum2024.math.Functions;
 import com.paramada.marycum2024.math.Rect;
 import com.paramada.marycum2024.networking.NetworkManager;
+import com.paramada.marycum2024.util.functionality.bridges.LivingEntityBridge;
 import com.paramada.marycum2024.util.inventory.SpecialSlotManager;
 import com.paramada.marycum2024.util.souls.ISoulsPlayerCamera;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +23,7 @@ import java.util.function.Predicate;
 
 public class SoulsPlayer implements ISoulsPlayerCamera {
 
-    private static final Predicate<LivingEntity> ENTITY_PREDICATE = entity -> entity.isAlive() && entity.isAttackable();
+    private static final Predicate<LivingEntity> ENTITY_PREDICATE = entity -> entity.isAlive() && entity.isAttackable() && !entity.isPlayer();
     public final PlayerEntity player;
     private final MinecraftClient client;
 
@@ -29,6 +31,7 @@ public class SoulsPlayer implements ISoulsPlayerCamera {
     public final SpecialSlotManager offHandSelectorManager = new SpecialSlotManager(10, 14);
 
     private LivingEntity lockedTarget = null;
+    private int selectedSpellSlot = 0;
 
     private boolean enabledPrimarySwap = true;
     private boolean enabledSecondarySwap = true;
@@ -57,7 +60,6 @@ public class SoulsPlayer implements ISoulsPlayerCamera {
         }
 
         currentAction = SoulsAction.ATTACKING_HEAVY;
-        System.out.println("heavy attack");
 
     }
 
@@ -69,7 +71,6 @@ public class SoulsPlayer implements ISoulsPlayerCamera {
         }
 
         currentAction = SoulsAction.ATTACKING;
-        System.out.println("light attack");
 
     }
 
@@ -104,26 +105,33 @@ public class SoulsPlayer implements ISoulsPlayerCamera {
         }
     }
 
+    public void setCurrentSpellSlot(int spell) {
+        selectedSpellSlot = spell;
+    }
+
     public void tick() {
         var shoulderSurfing = ShoulderSurfing.getInstance();
         var tickDelta = client.getTickDelta();
 
         if (shoulderSurfing != null) {
             if (!player.isSpectator() && !player.isCreative() && !shoulderSurfing.isShoulderSurfing()) {
-                shoulderSurfing.changePerspective(Perspective.SHOULDER_SURFING);
+                //shoulderSurfing.changePerspective(Perspective.SHOULDER_SURFING);
             }
             if (this.hasLockedTarget() && player.getWorld().isClient && !client.isPaused()) {
                 var camera = shoulderSurfing.getCamera();
                 var target = lockedTarget;
                 var direction = target.getLerpedPos(tickDelta).subtract(player.getEyePos()).normalize();
-                var yawDelta = getNewDeltaYaw(direction);
-                camera.setYRot(yawDelta);
+                var newYaw = getNewDeltaYaw(camera.getYRot(), direction);
+                if (Math.abs(newYaw - camera.getYRot()) > 0.01f) {
+                    player.setYaw(newYaw);
+                    camera.setYRot(newYaw);
+                }
             }
         } else {
             if (this.hasLockedTarget() && player.getWorld().isClient && !client.isPaused()) {
                 var target = lockedTarget;
                 var direction = target.getLerpedPos(tickDelta).subtract(player.getEyePos()).normalize();
-                var yawDelta = getNewDeltaYaw(direction);
+                var yawDelta = getNewDeltaYaw(player.getYaw(), direction);
                 player.setYaw(yawDelta);
             }
         }
@@ -133,8 +141,10 @@ public class SoulsPlayer implements ISoulsPlayerCamera {
         }
     }
 
-    private float getNewDeltaYaw(Vec3d directionVec) {
-        return (float) Functions.toDegrees(Math.atan2(-directionVec.x, directionVec.z));
+    private float getNewDeltaYaw(final float playerYaw, Vec3d directionVec) {
+        final float tickDelta = client.getTickDelta();
+        final float degree = (float) Functions.toDegrees(Math.atan2(-directionVec.x, directionVec.z));
+        return Functions.lerpAngleYaw(playerYaw, degree, 1);
     }
 
     public void switchPrimaryHand() {
@@ -277,7 +287,6 @@ public class SoulsPlayer implements ISoulsPlayerCamera {
         }
 
         // TODO
-        System.out.println("a");
     }
 
     public void enableSwitchPrimary() {
@@ -302,6 +311,21 @@ public class SoulsPlayer implements ISoulsPlayerCamera {
 
     public void stopUsingItem() {
         currentAction = SoulsAction.IDLE;
+    }
+
+    public SpellTrinket getCurrentSpell() {
+        var trinketComponent = LivingEntityBridge.getTrinketComponent(player);
+        var spells = trinketComponent.getEquipped(stack -> stack.getItem() instanceof SpellTrinket);
+        var filter = spells.stream().filter(data -> data.getLeft().index() == selectedSpellSlot).findFirst();
+        SpellTrinket spell = null;
+        if (filter.isPresent()) {
+            spell = (SpellTrinket) filter.get().getRight().getItem();
+        }
+        return spell;
+    }
+
+    public int getCurrentSpellSlot() {
+        return selectedSpellSlot;
     }
 
     public enum SoulsAction {

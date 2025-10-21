@@ -4,6 +4,7 @@ import com.paramada.marycum2024.MaryMod2024;
 import com.paramada.marycum2024.attributes.ModEntityAttributes;
 import com.paramada.marycum2024.effects.ModEffects;
 import com.paramada.marycum2024.items.ItemManager;
+import com.paramada.marycum2024.items.custom.weapons.GuardianShield;
 import com.paramada.marycum2024.util.functionality.IEntityDataSaver;
 import com.paramada.marycum2024.util.functionality.bridges.PlayerEntityBridge;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -19,12 +20,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -103,13 +107,12 @@ public abstract class LivingEntityMixin extends Entity implements IEntityDataSav
         if (trinketComponent.isPresent()) {
             var comp = trinketComponent.get();
             if (comp.isEquipped(ItemManager.MICROPHONE_TRINKET)) {
-                var damageMultiplier = player.getAttributeValue(ModEntityAttributes.DISTANCE_DAMAGE_MULTIPLIER);
+                var damageMultiplier = player.getAttributeValue(ModEntityAttributes.DISTANCE_DAMAGE);
                 return (float) (amount * damageMultiplier);
             }
         }
         return amount;
     }
-
 
     @Inject(at = @At("HEAD"), method = "damage")
     private void onGetDamage(DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
