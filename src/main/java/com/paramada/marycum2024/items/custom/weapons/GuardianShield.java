@@ -3,6 +3,8 @@ package com.paramada.marycum2024.items.custom.weapons;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.paramada.marycum2024.attributes.ModComponents;
+import com.paramada.marycum2024.attributes.shield.ShieldComponent;
 import com.paramada.marycum2024.items.ItemRarity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -110,6 +112,8 @@ public class GuardianShield extends AxeItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         final ItemStack stack = user.getStackInHand(hand);
         if (hand == Hand.MAIN_HAND && !user.getItemCooldownManager().isCoolingDown(stack.getItem())) {
+            final ShieldComponent shield = ModComponents.SHIELD.get(user);
+            shield.add((int) (user.getMaxHealth() / 20));
             this.isChanneling = true;
             user.getItemCooldownManager().set(this, 20 * 60);
             user.getAttributes().addTemporaryModifiers(USAGE_MODIFIERS);
@@ -160,9 +164,7 @@ public class GuardianShield extends AxeItem {
         final var modifiers = HashMultimap.create(super.getAttributeModifiers(slot));
         switch (slot) {
             case OFFHAND -> modifiers.putAll(offHandModifiers);
-            case MAINHAND -> {
-                modifiers.putAll(handModifiers);
-            }
+            case MAINHAND -> modifiers.putAll(handModifiers);
         }
         return modifiers;
     }

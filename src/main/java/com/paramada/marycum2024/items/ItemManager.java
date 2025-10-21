@@ -89,7 +89,7 @@ public class ItemManager {
 
     public static final Item COMMON_SHIELD = new GuardianShield(
             10,
-            -1.5f,
+            -3.5f,
             ItemRarity.COMMON,
             ImmutableMultimap.of(
                     EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(UUID.randomUUID(), "shield_armor", 20, EntityAttributeModifier.Operation.ADDITION),
@@ -105,7 +105,7 @@ public class ItemManager {
     );
     public static final Item UNCOMMON_SHIELD = new GuardianShield(
             10,
-            -1.5f,
+            -3.4f,
             ItemRarity.UNCOMMON,
             ImmutableMultimap.of(
                     EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(UUID.randomUUID(), "shield_armor", 20, EntityAttributeModifier.Operation.ADDITION),
@@ -121,7 +121,7 @@ public class ItemManager {
     );
     public static final Item RARE_SHIELD = new GuardianShield(
             10,
-            -1.5f,
+            -3.3f,
             ItemRarity.RARE,
             ImmutableMultimap.of(
                     EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(UUID.randomUUID(), "shield_armor", 20, EntityAttributeModifier.Operation.ADDITION),
@@ -137,7 +137,7 @@ public class ItemManager {
     );
     public static final Item EPIC_SHIELD = new GuardianShield(
             10,
-            -1.5f,
+            -3.2f,
             ItemRarity.EPIC,
             ImmutableMultimap.of(
                     EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(UUID.randomUUID(), "shield_armor", 20, EntityAttributeModifier.Operation.ADDITION),
@@ -153,7 +153,7 @@ public class ItemManager {
     );
     public static final Item LEGENDARY_SHIELD = new GuardianShield(
             10,
-            -1.5f,
+            -3.1f,
             ItemRarity.LEGENDARY,
             ImmutableMultimap.of(
                     EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(UUID.randomUUID(), "shield_armor", 20, EntityAttributeModifier.Operation.ADDITION),

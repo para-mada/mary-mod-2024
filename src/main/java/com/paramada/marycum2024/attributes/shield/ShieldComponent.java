@@ -6,17 +6,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public interface ShieldComponent extends Component {
     int getCurrent();
-    int getMax();
     int getMax(PlayerEntity player);
-
-    void setCurrent(int v);
-    void setMax(int v);
 
     /** Intenta gastar; true si alcanzó */
     boolean tryConsume(int amount);
 
     /** Rellena hasta el tope */
-    void restore(int amount);
+    void add(int amount);
 
     /** Lógica por tick (regen) */
     void tick(ServerPlayerEntity player);

@@ -63,6 +63,9 @@ public class MagicWand extends AxeItem {
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         final var soulsPlayer = PlayerEntityBridge.getSoulsPlayer((PlayerEntity) user);
         final var spell = soulsPlayer.getCurrentSpell();
+        if (spell == null) {
+            return;
+        }
         int i = this.getMaxUseTime(stack, spell, user) - remainingUseTicks;
         float f = getPullProgress(i);
 

@@ -9,7 +9,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public final class ShieldComponentImpl implements ShieldComponent, AutoSyncedComponent {
     private int current = 0;
-    private int max = 10;
     private int tickAccumulator = 0; // para 20 tps → +regen cada segundo
 
     @Override
@@ -18,25 +17,8 @@ public final class ShieldComponentImpl implements ShieldComponent, AutoSyncedCom
     }
 
     @Override
-    public int getMax() {
-        return max;
-    }
-
-    @Override
     public int getMax(PlayerEntity player) {
-        int additionalMax = 0; //(int) player.getAttributeValue(ModEntityAttributes.ADDITIONAL_SHIELD);
-        return max + additionalMax * 10;
-    }
-
-    @Override
-    public void setCurrent(int v) {
-        current = Math.max(0, Math.min(v, max));
-    }
-
-    @Override
-    public void setMax(int v) {
-        max = Math.max(1, v);
-        if (current > max) current = max;
+        return (int) player.getMaxHealth() / 2;
     }
 
     @Override
@@ -50,9 +32,9 @@ public final class ShieldComponentImpl implements ShieldComponent, AutoSyncedCom
     }
 
     @Override
-    public void restore(int amount) {
+    public void add(int amount) {
         if (amount <= 0) return;
-        current = Math.min(max, current + amount);
+        current = current + amount;
     }
 
     @Override
@@ -65,7 +47,6 @@ public final class ShieldComponentImpl implements ShieldComponent, AutoSyncedCom
         }
         if (tickAccumulator >= 5) {
             tickAccumulator -= 5;
-
             if (current < max) {
                 ModComponents.SHIELD.sync(player);
             }
@@ -75,14 +56,10 @@ public final class ShieldComponentImpl implements ShieldComponent, AutoSyncedCom
     // ===== Persistencia NBT =====
     @Override
     public void readFromNbt(NbtCompound tag) {
-        current = tag.getInt("current");
-        max = tag.getInt("max");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        tag.putInt("current", current);
-        tag.putInt("max", max);
     }
 
     @Override

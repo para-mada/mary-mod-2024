@@ -134,23 +134,34 @@ public abstract class InGameHudMixin {
 
         final String humanizedHealth = MadaMathHelper.humanizeDouble(health);
         final String humanizedMaxHealth = MadaMathHelper.humanizeDouble(maxHealth);
+        final String humanizedShield = MadaMathHelper.humanizeDouble(shield);
+        final float maxHPBar = maxHealth + shield;
 
-        final String renderedText = "%s/%s".formatted(humanizedHealth, humanizedMaxHealth);
+        String renderedText = "%s/%s".formatted(humanizedHealth, humanizedMaxHealth);
+        if (shield > 0) {
+            renderedText += " + %s".formatted(humanizedShield);
+        }
+
         TextRenderer textRenderer = getTextRenderer();
 
         int fontHeight = textRenderer.fontHeight;
         int textWidth = textRenderer.getWidth(renderedText);
 
         int spriteWidth = 86;
-        int percentagePixels = (int) ((health * (spriteWidth - 2)) / maxHealth);
+        final int maxBar = spriteWidth - 2;
+        int healthPixels = (int) ((health * (spriteWidth - 2)) / maxHPBar);
+        float shieldSize = ((shield * (spriteWidth - 2)) / maxHPBar);
+        int shieldPixels = (int) MathHelper.clamp(Math.ceil(shieldSize), 0, maxBar);
         int spriteHeight = 9;
         int textureWidth = 86;
         int textureHeight = 7;
 
         context.drawTexture(BAR_BACKGROUND, x, y, spriteWidth, spriteHeight, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
         context.setShaderColor(203 / 255f, 48 / 255f, 64 / 255f, 1);
-        context.drawTexture(BAR_FILL, x + 1, y + 1, percentagePixels, spriteHeight - 2, 0, 0, percentagePixels, textureHeight - 2, textureWidth - 2, textureHeight - 2);
+        context.drawTexture(BAR_FILL, x + 1, y + 1, healthPixels, spriteHeight - 2, 0, 0, healthPixels, textureHeight - 2, textureWidth - 2, textureHeight - 2);
         context.drawTexture(HEART_ICON, x - 10, y, 9, 9, 0, 0, 9, 9, 9, 9);
+        context.setShaderColor(181 / 255f, 181 / 255f, 189 / 255f, 1);
+        context.drawTexture(BAR_FILL, x + 1 + healthPixels, y + 1, shieldPixels, spriteHeight - 2, healthPixels, 0, shieldPixels, textureHeight - 2, textureWidth - 2, textureHeight - 2);
         context.setShaderColor(1, 1, 1, 1);
         context.drawText(
             getTextRenderer(),
@@ -197,7 +208,7 @@ public abstract class InGameHudMixin {
 
         context.drawTexture(BAR_BACKGROUND, x, y, spriteWidth, spriteHeight, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
         context.setShaderColor(33 / 255f, 143 / 255f, 246 / 255f, 1);
-        context.drawTexture(BAR_FILL, x + 1, y + 1, percentagePixels, spriteHeight - 2, 0, 0, percentagePixels, textureHeight - 2, textureWidth - 2, textureHeight - 2);
+        context.drawTexture(BAR_FILL, x + textureWidth - 1 - percentagePixels, y + 1, percentagePixels, spriteHeight - 2, textureWidth - 2 - percentagePixels, 0, percentagePixels, textureHeight - 2, textureWidth - 2, textureHeight - 2);
         context.setShaderColor(45 / 255f, 124 / 255f, 255 / 255f, 1);
         context.drawTexture(MANA_ICON, x + spriteWidth + 1, y, 9, 9, 0, 0, 9, 9, 9, 9);
         context.setShaderColor(1, 1, 1, 1);
@@ -243,14 +254,15 @@ public abstract class InGameHudMixin {
         int manaBarX = this.scaledWidth / 2 + 4;
         int statusBarsStartY = this.scaledHeight - 39;
         float maxHealth = Math.max((float) playerEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH), (float) Math.max(health, lastHealthValue));
-        int shieldAmount = MathHelper.ceil(playerEntity.getAbsorptionAmount());
 
         final var manaComponent = ModComponents.MANA.get(playerEntity);
+        final var shieldComponent = ModComponents.SHIELD.get(playerEntity);
 
         final int maxMana = manaComponent.getMax(playerEntity);
         final int mana = manaComponent.getCurrent();
+        final int shield = shieldComponent.getCurrent();
 
-        this.renderCustomHealth(context, healthBarX, statusBarsStartY, maxHealth, playerEntity.getHealth(), shieldAmount);
+        this.renderCustomHealth(context, healthBarX, statusBarsStartY, maxHealth, playerEntity.getHealth(), shield);
         this.renderCustomMana(context, manaBarX, statusBarsStartY, maxMana, mana);
         final int slotSpriteSize = 20;
         final int offset = 5;
